@@ -1,0 +1,33 @@
+[14-Nov-2017 16:56:26 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 16:57:57 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:04:25 Asia/Calcutta] PHP Warning:  phpinfo() has been disabled for security reasons in /home/acrefin/public_html/agribridge/api/v1/index.php on line 2
+[14-Nov-2017 17:27:40 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:29:12 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:29:20 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:30:53 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:30:55 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:30:56 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:30:57 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:30:58 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:30:58 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:31:01 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:33:59 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:34:00 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:34:01 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:34:02 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:35:06 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:26 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:27 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:28 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:29 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:30 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:30 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:31 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:32 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:40 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:42 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[14-Nov-2017 17:43:42 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[15-Nov-2017 10:30:16 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[23-Nov-2017 15:10:46 Asia/Calcutta] PHP Fatal error:  Call to undefined method mysqli_stmt::get_result() in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 29
+[09-Jan-2018 11:53:18 Asia/Calcutta] PHP Fatal error:  Call to a member function bind_param() on a non-object in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 45
+[09-Jan-2018 11:53:49 Asia/Calcutta] PHP Fatal error:  Call to a member function bind_param() on a non-object in /home/acrefin/public_html/agribridge/api/include/DbHandler.php on line 45
