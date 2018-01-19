@@ -35,8 +35,8 @@ function verifyRequiredParams($required_fields) {
         $response = array();
         $app = \Slim\Slim::getInstance();
         $response['success'] = false;
-        $response["message"] = 'Required field(s) ' . substr($error_fields, 0, -2) . ' is missing or empty';
-        echoResponse(400, $response);
+        $response["data"] = ["error_code" => '104', "error_messgae" => 'Required field(s) ' . substr($error_fields, 0, -2) . ' is missing or empty'];
+        echoResponse(200, $response);
         $app->stop();
     }
 }

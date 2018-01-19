@@ -1,0 +1,9 @@
+PUT http://localhost/app/Github/agribridge-api/v1/add_farmer
+Content-type: application/x-www-form-urlencoded
+Authorization: 1495b8d7e609df61c27a06e8cf4b2316
+
+fm_id : 102015,
+fm_fname : www, 
+fm_lname : www, 
+fm_aadhar : 121212121212, 
+fm_mobileno : 1212121212
