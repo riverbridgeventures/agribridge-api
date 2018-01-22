@@ -1,0 +1,37 @@
+POST - fm_delete
+-------------------------------------------------------------
+
+	The "fm_delete" API uses POST method to delete farmer data
+	Client will send the request along with the fm_ids to delete,
+	In response, the server will send the success/unsuccess flag.
+
+Following is the sample of request/response pair.
+
+
+==================================
+Request:
+==================================
+{
+	fm_id: 123456
+}
+
+
+==================================
+Response: Success
+==================================
+{
+	{"success":true,"data":""}
+}
+
+
+==================================
+Response: Fail
+==================================
+{
+	success: false,
+	data:[
+		{error_code: "123", error_message: "Some message regarding the error."},
+		{error_code: "123", error_message: "Some message regarding the error."},
+		{error_code: "123", error_message: "Some message regarding the error."}
+	]
+}

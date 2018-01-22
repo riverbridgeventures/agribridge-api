@@ -1,0 +1,42 @@
+POST - delete_extra_table
+-------------------------------------------------------------
+
+	The "delete_extra_table" API uses POST method to delete farmer data
+	Client will send the request along with the tablename, server_id and fm_id to delete,
+	In response, the server will send the success/unsuccess flag.
+
+	Make sure the following things,
+	1. If tablename is tbl_land_details then delete all associated crop cultivation data too where f10_land is 		equal to server_id
+
+Following is the sample of request/response pair.
+
+
+==================================
+Request:
+==================================
+{
+	tablename: "name",
+	server_id: "123"
+}
+
+
+==================================
+Response: Success
+==================================
+{
+	success: true,
+	message: "optional if any"
+}
+
+
+==================================
+Response: Fail
+==================================
+{
+	success: false,
+	data:[
+		{error_code: "123", error_message: "Some message regarding the error."},
+		{error_code: "123", error_message: "Some message regarding the error."},
+		{error_code: "123", error_message: "Some message regarding the error."}
+	]
+}

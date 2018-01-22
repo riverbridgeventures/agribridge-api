@@ -1,0 +1,114 @@
+GET - fm_data
+-------------------------------------------------------------
+
+	The "fm_data" API uses GET method to retrieve farmer data
+	Client will send the request along with the no. of farmers and fm_ids which is available at client side,
+	In response, the server will send the requested no. of farmers which is not in requested fm_ids(as it is already available in client side).
+
+Following is the sample of request/response pair.
+
+==================================
+Request:
+==================================
+{
+	fm_ids: ["123", "456", "789", "012"],
+	total: number/All
+}
+
+
+==================================
+Response: Success
+==================================
+{
+	success: true,
+	moreAvailable: true,
+	data:[
+		{
+			fm_id: "12345", 
+			values:[
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+			]
+		},
+		{
+			fm_id: "12345", 
+			values:[
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+				{
+					tablename: "",
+					rows: [
+						{datarow1},
+						{datarow2},
+						{datarow3},
+					]
+				},
+			]
+		}
+	]
+}
+
+==================================
+Response: Fail
+==================================
+{
+	success: false,
+	data:[
+		{error_code: "123", error_message: "Some message regarding the error."},
+		{error_code: "123", error_message: "Some message regarding the error."},
+		{error_code: "123", error_message: "Some message regarding the error."}
+	]
+}
+

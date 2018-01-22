@@ -40,8 +40,7 @@
         	$resp_array         = array();
             $table              =  $this->tablename;
 
-        	
-            $udata['id']        = $data['server_id'];
+        	$udata['id']        = $data['server_id'];
             $udata['f_status']  = 1;
 
             $flag = $this->isDeleted($data['server_id']);// check previously deleted or not
