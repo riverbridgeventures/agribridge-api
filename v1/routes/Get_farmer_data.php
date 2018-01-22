@@ -3,168 +3,60 @@
         class Db_data_table
         {
             private $conn;
-            private $tablename = "";
-            private $gen_insert_query;
-            private $gen_data_array;
-            private $gen_update_query;
-            private $gen_update_data_array;
+            private $tablename        = "";
             private $fm_ids_arr       = array();
+            private $tbl_arr          = array();
+          
+            
 
-            function __construct($table_name)
+            function __construct()
             {
                 require_once dirname(__FILE__) . '/../../include/DbConnect.php';
                 // opening db connection
                 $db         = new DbConnect();
                 $this->conn = $db->PDO();
-                $this->tablename = $table_name;
+               
 
-                $res = $this->conn->query("SHOW COLUMNS FROM ".$this->tablename)->fetchAll();
+               
 
-                $this->getInsertQuery($res);
-                $this->getUpdateQuery($res);
-            }
+                $this->tbl_arr = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_bank_loan_detail','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
 
-            public function isInserted($fm_id)
-            {
-                $res = $this->conn->query("SELECT fm_caid FROM ".$this->tablename. " WHERE fm_id = " . $fm_id)->fetchAll();
-
-                if(sizeof($res) > 0){
-                    return true;
-                }
-                return false;
-            }
-
-            private function getInsertQuery($array)
-            {
-
-                $q = "INSERT INTO ";
-                $q .= "`" . $this->tablename . "` (";
-
-                $cols = '';
-                $vals = '';
-                $para = '';
-                $data_val = '';
-                $data_arr = [];
-
-                foreach ($array as $field) {
-                    if($field['Extra'] != "auto_increment"){
-                        $cols .= "`" . $field['Field'] . "`, ";
-                        $vals .= ":".$field['Field'].", ";
-
-                        if (strpos($field['Type'], 'int') !== false) {
-                            $para .= 'i';
-                        }else{
-                            $para .= 's';
-                        }
-
-                        $data_arr[] = $field['Field'];
-                    }
-                }
-
-
-                $cols     = substr(trim($cols), 0, -1);
-                $vals     = substr(trim($vals), 0, -1);
-
-                $q .= $cols . ") VALUES(";
-                $q .= $vals . ")";
-
-                $this->gen_insert_query = $q;
-                $this->gen_data_array = $data_arr;
-                // $this->gen_insert_param = $para;
-            }
-
-            private function getUpdateQuery($array)
-            {
-                
-                $q = "UPDATE ";
-                $q .= "`" . $this->tablename . "` SET ";
-
-                $cols = '';
-                $data_arr = [];
-
-                foreach ($array as $field) {
-                    if($field['Extra'] != "auto_increment" && $field['Field'] != "fm_id"){
-                        $cols .= "" . $field['Field'] . " = :".$field['Field'].", ";
-
-                        $data_arr[] = $field['Field'];
-                    }
-                }
-
-                $cols = substr(trim($cols), 0, -1);
-
-                $q .= $cols ;
-                $q .= " WHERE fm_id = :fm_id AND id = :id ";
-
-
-                $this->gen_update_query = $q;
-                $this->gen_update_data_array = $data_arr;
-            }
-
-            public function create($data)
-            {
-                $final_data = [];
-                $data_array = $this->gen_data_array;
-                foreach($data_array as $val){
-                    if(!isset($data[$val])){
-                        $data[$val] = '';
-                    }
-                    $final_data[$val] = $data[$val];
-                }
-
-                $query = $this->gen_insert_query;
-                //var_dump($query);
-                //exit();
-                $stmt = $this->conn->prepare($query);
-
-                $result = $stmt->execute($final_data);
-                // Check for successful insertion
-                if ($result) {
-                    // Farmer successfully inserted
-                    $last_id = $this->conn->lastInsertId();
-                    return $last_id;
-                } else {
-                    // Failed to create Farmer
-                    return false;
-                }
-            }
-
-            public function update($data)
-            {
-                $final_data = [];
-                $data_array = $this->gen_update_data_array;
-                foreach($data_array as $val){
-                    if(!isset($data[$val])){
-                        $data[$val] = '';
-                    }
-                    $final_data[$val] = $data[$val];
-                }
-
-                //setting explicitly because its not exists in $data_array
-                $final_data['fm_id'] = $data['fm_id'];
-                $final_data['id'] = $data['id'];
-
-                $query = $this->gen_update_query;
-                $stmt = $this->conn->prepare($query);
-
-
-                $result = $stmt->execute($final_data);
-
-                // Check for successful update
-                if ($result) {
-                    // Data successfully updated
-                    return true;
-                } else {
-                    // Failed to update Data
-                    return false;
-                } 
             }
 
             public function getall($fm_ids_arr)
             {
-                $sql  =" SELECT * FROM ";
-                $sql .= $tablename ;
-                $sql .= " WHERE status=1 AND fm_id NOT IN (".implode(',',$this->fm_ids_arr).") ";
-                print_r($sql);
+                $tables = $this->tbl_arr;
+
+                foreach($tables as $table)
+                {
+                    // $ids = preg_split('/\s*,\s*/', $fm_ids_arr, -1, PREG_SPLIT_NO_EMPTY);
+
+                    // Create an array of ? characters the same length as the number of IDs and join
+                    // it together with commas, so it can be used in the query string
+                    $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
+
+                    // Prepare the statement
+                    $STH =$this->conn->prepare("SELECT * FROM ".$table." WHERE id NOT IN ($placeHolders)");
+
+                    
+                    foreach ($fm_ids_arr as $index => $value) {
+                        $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
+                        
+                    }
+
+                    // This should now work
+                    $result = $STH->execute();
+                    while($row = $STH->fetch(PDO::FETCH_ASSOC)) {
+                        echo '<pre>'; print_r($row); echo'</pre>';
+                    }
+
+                    // $res  = array();
+                    // $sql  =" SELECT * FROM ";
+                    // $sql .= $this->tablename ;
+                    // $sql .= " WHERE status=1 AND fm_id NOT IN (".implode(',',$this->fm_ids_arr).") ";
+                }
+               
+                print_r($result);exit();
             }
         }
 
@@ -178,7 +70,7 @@
     	$total = $data['total'];
 
     	// Start : check valid table or not
-    	$tbl_arr   = array('tbl_land_details', 'tbl_cultivation_data', 'tbl_yield_details', 'tbl_loan_details');
+    	
     	
 
     	$fm_ids_arr  = array();
@@ -200,20 +92,15 @@
         	$response["success"] = false;
             $response["data"] = $err_data;
             echoResponse(201, $response);
-        }else{
+        }else
+        {
 
-        	//set default values here
-	        $data['fm_caid'] = $user_id;
+        	$data['fm_caid'] = $user_id;
 	        
-            foreach($tbl_arr as $tbl)
-            {
-                $db = new Db_data_table($tbl);
-                $return_data = $this->getAll($fm_ids_arr);
-            }
-	        
-        	
-
-	        if ($return_data !== false) {
+            $db          = new Db_data_table();
+            $return_data = $db->getAll($fm_ids_arr);
+            
+            if ($return_data !== false) {
 	            $response["success"] = true;
 	            $response["data"] = ["message" => "Data updated successfully!"];
 	        } else {
