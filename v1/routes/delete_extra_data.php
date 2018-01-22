@@ -7,13 +7,8 @@
 	{
 		private $conn;
 		private $tablename = "";
-		private $gen_insert_query;
-		private $gen_data_array;
-		private $gen_update_query;
-		private $gen_update_data_array;
-		private $tbl_arr = array();
-		private $fm_id_arr  = array();
-        private $isDeleted;
+	    private $tbl_arr = array();
+		private $isDeleted;
 
 
 		function __construct($tablename)
@@ -45,7 +40,7 @@
         	$resp_array         = array();
             $table              =  $this->tablename;
 
-        	$udata['fm_id']     = $data['fm_id'];
+        	
             $udata['id']        = $data['server_id'];
             $udata['f_status']  = 1;
 
@@ -54,11 +49,8 @@
             {
                 $query  =" UPDATE ".$table ;
                 $query .=" SET ";
-                $query  .= "f_status=:f_status ,";
-                
-                $query   =chop($query,',');
-
-                $query  .=" WHERE fm_id=:fm_id AND id=:id ";
+                $query  .= "f_status=:f_status ";
+                $query  .=" WHERE  id=:id ";
              
                 $stmt = $this->conn->prepare($query);
                 $result = $stmt->execute($udata);
@@ -79,7 +71,7 @@
 	}
 
 	$app->post('/delete_extra_data', 'authenticate', function() use ($app){
-        verifyRequiredParams(['tablename', 'fm_id','server_id']); //provide a list of required parametes
+        verifyRequiredParams(['tablename','server_id']); //provide a list of required parametes
         
         //declare variables
         $data = $app->request->post(); //fetching the post data into variable

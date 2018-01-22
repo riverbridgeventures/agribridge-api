@@ -6,6 +6,7 @@
             private $tablename        = "";
             private $fm_ids_arr       = array();
             private $tbl_arr          = array();
+            
           
             
 
@@ -13,50 +14,68 @@
             {
                 require_once dirname(__FILE__) . '/../../include/DbConnect.php';
                 // opening db connection
-                $db         = new DbConnect();
-                $this->conn = $db->PDO();
+                $db             = new DbConnect();
+                $this->conn     = $db->PDO();
                
-
-               
-
-                $this->tbl_arr = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_bank_loan_detail','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
+                $this->tbl_arr  = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_bank_loan_detail','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
 
             }
 
-            public function getall($fm_ids_arr)
+            public function getall($fm_ids_arr,$limit)
             {
                 $tables = $this->tbl_arr;
 
-                foreach($tables as $table)
-                {
-                    // $ids = preg_split('/\s*,\s*/', $fm_ids_arr, -1, PREG_SPLIT_NO_EMPTY);
+                $resp_array = array();
+                $fm_ids     = array();
 
-                    // Create an array of ? characters the same length as the number of IDs and join
-                    // it together with commas, so it can be used in the query string
-                    $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
+                if($limit=='')
+                {
+                    $limit = 1;
+                }
+
+
+                $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
 
                     // Prepare the statement
-                    $STH =$this->conn->prepare("SELECT * FROM ".$table." WHERE id NOT IN ($placeHolders)");
-
-                    
-                    foreach ($fm_ids_arr as $index => $value) {
+                $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_id NOT IN ($placeHolders) AND f_status=0 LIMIT ".$limit." ");
+                foreach ($fm_ids_arr as $index => $value) 
+                {
                         $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
                         
-                    }
+                }
 
                     // This should now work
-                    $result = $STH->execute();
-                    while($row = $STH->fetch(PDO::FETCH_ASSOC)) {
-                        echo '<pre>'; print_r($row); echo'</pre>';
+                $result = $STH->execute();
+                while($row = $STH->fetch(PDO::FETCH_ASSOC))
+                {
+                    array_push($fm_ids,$row['fm_id']);
+                    
+                }
+
+
+                foreach($fm_ids as $fm_id)
+                {
+                    $table_array   = array();
+                    foreach($tables as $table)
+                    {
+                        $statement = $this->conn->prepare("SELECT * FROM ".$table." WHERE fm_id =:id AND f_status=:status ");
+                        $statement->execute(array(':id' => $fm_id,'status'=>0));
+                        //$row = $statement->fetch(); 
+                        while($row = $statement->fetch(PDO::FETCH_ASSOC))
+                        {
+                           $tarr = array('tablename'=>$table,'rows'=>$row);
+                           array_push($table_array,$tarr);
+                            
+                        }
                     }
 
-                    // $res  = array();
-                    // $sql  =" SELECT * FROM ";
-                    // $sql .= $this->tablename ;
-                    // $sql .= " WHERE status=1 AND fm_id NOT IN (".implode(',',$this->fm_ids_arr).") ";
-                }
+                    $resp = array('fm_id'=>$fm_id,'values:'=>$table_array);
+                    array_push($resp_array,$resp);
+                }// foreach fm_ids
+
+                    
                
-                print_r($result);exit();
+                return $resp_array;
             }
         }
 
@@ -98,11 +117,12 @@
         	$data['fm_caid'] = $user_id;
 	        
             $db          = new Db_data_table();
-            $return_data = $db->getAll($fm_ids_arr);
+            
+            $return_data = $db->getAll($fm_ids_arr,$data['total']);
             
             if ($return_data !== false) {
 	            $response["success"] = true;
-	            $response["data"] = ["message" => "Data updated successfully!"];
+	            $response["data"] = $return_data;
 	        } else {
 	            $response["success"] = false;
 	            $response["data"] = [

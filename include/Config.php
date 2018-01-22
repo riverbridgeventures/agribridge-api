@@ -4,7 +4,7 @@
 /** Database config */
 //define('DB_USERNAME', 'root');  
 //define('DB_PASSWORD', '');
-if($_SERVER['HTTP_HOST'] == 'localhost'){
+if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '192.168.0.19'){
 	define('DB_USERNAME', 'root');  
 	define('DB_PASSWORD', '');  
 	define('DB_HOST', 'localhost');  
