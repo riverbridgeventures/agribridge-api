@@ -62,6 +62,7 @@ require './routes/Add_farmer.php';
 require './routes/Send_table.php';
 require './routes/Send_extra_table.php';
 require './routes/Get_farmer_data.php';
+require './routes/delete_data.php';
 
 
 // Run Slim

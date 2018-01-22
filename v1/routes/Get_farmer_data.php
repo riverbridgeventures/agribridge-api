@@ -159,7 +159,7 @@
                 } 
             }
 
-            public function getall($tablename)
+            public function getall($fm_ids_arr)
             {
                 $sql  =" SELECT * FROM ";
                 $sql .= $tablename ;
@@ -205,11 +205,12 @@
         	//set default values here
 	        $data['fm_caid'] = $user_id;
 	        
-
-	        $db = new Db_data_table($tbl_arr);
-        	
-        	
-		    $return_data = $this->getAll($data);
+            foreach($tbl_arr as $tbl)
+            {
+                $db = new Db_data_table($tbl);
+                $return_data = $this->getAll($fm_ids_arr);
+            }
+	        
         	
 
 	        if ($return_data !== false) {
