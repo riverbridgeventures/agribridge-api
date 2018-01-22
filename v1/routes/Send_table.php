@@ -168,19 +168,27 @@
         global $user_id;
     	$tablename = $data['tablename'];
 
+    	$tbl_arr = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_bank_loan_detail','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
+
+    	if(!in_array($tablename,$tbl_arr))//check valid table
+    	{
+    		$err_data = [
+            	["error_code" => "404", "error_message" => "Invalid table name"]
+            ];
+    	}
+
 
         //set default values here
         $data['fm_caid'] = $user_id;
 
-        $db = new Db_table($tablename);
-
-        //check if validation errors exists
+     	//check if validation errors exists
         if($err_data !== []){
         	$response["success"] = false;
             $response["data"] = $err_data;
             echoResponse(201, $response);
         }else{
 
+        	$db = new Db_table($tablename);
         	//valid data hence inserting/updating into table
         	if($db->isInserted($data['fm_id'])){
 		        $return_data = $db->update($data);
