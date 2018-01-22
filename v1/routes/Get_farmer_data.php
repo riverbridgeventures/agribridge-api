@@ -206,7 +206,7 @@
 	        $data['fm_caid'] = $user_id;
 	        
 
-	       $db = new Db_data_table('');
+	        $db = new Db_data_table($tbl_arr);
         	
         	
 		    $return_data = $this->getAll($data);
