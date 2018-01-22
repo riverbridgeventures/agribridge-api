@@ -86,7 +86,7 @@
 
 	}
 
-	$app->post('/delete_data', 'authenticate', function() use ($app){
+	$app->post('/fm_delete', 'authenticate', function() use ($app){
         verifyRequiredParams(['fm_id']); 
         
         //declare variables

@@ -69,7 +69,7 @@
 
 	}
 
-	$app->post('/delete_extra_data', 'authenticate', function() use ($app){
+	$app->post('/delete_extra_table', 'authenticate', function() use ($app){
         verifyRequiredParams(['tablename','server_id']); //provide a list of required parametes
         
         //declare variables
