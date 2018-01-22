@@ -3,7 +3,7 @@
 	/**
 	* 
 	*/
-	class Db_dtable
+	class Db_del_data
 	{
 		private $conn;
 		private $tablename = "";
@@ -58,14 +58,7 @@
                     foreach($tbl_arr as $tbl)//for each 14 tables
                     {
                         $udata = array();
-                        if($i==0)
-                        {
-                           $udata['f_status'] = 1;
-                        }
-                        else
-                        {
-                            $udata['f_status'] =1;
-                        }
+                        $udata['f_status'] =1;
                         
                         $udata['fm_id']  =$fm_id;
 
@@ -135,7 +128,7 @@
             echoResponse(201, $response);
         }else{
 
-                $db          = new Db_dtable();
+                $db          = new Db_del_data();
                 $return_data = $db->update($fm_ids_arr);
 
                 $response["success"] = true;
