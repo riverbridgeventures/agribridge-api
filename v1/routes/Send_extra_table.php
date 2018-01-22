@@ -85,7 +85,7 @@
 	        $data_arr = [];
 
 	        foreach ($array as $field) {
-	            if($field['Extra'] != "auto_increment" && $field['Field'] != "fm_id"){
+	            if($field['Extra'] != "auto_increment" && $field['Field'] != "fm_id" && $field['Field'] != "f_created_by" && $field['Field'] != "f_created_date"){
 	                $cols .= "" . $field['Field'] . " = :".$field['Field'].", ";
 
 	                $data_arr[] = $field['Field'];
@@ -186,7 +186,8 @@
 
 
         
-
+        $data['f_created_by']   = $data['fm_id'];
+        $data['f_created_date'] = date('Y-m-d h:i:s');
         //check if validation errors exists
         if($err_data !== []){
         	$response["success"] = false;
@@ -250,6 +251,9 @@
         	//set default values here
 	        $data['fm_caid'] = $user_id;
 	        $data['id'] = $data['server_id'];
+
+            $data['f_modified_by']   = $data['fm_id'];
+            $data['f_modified_date'] = date('Y-m-d h:i:s');
 
 	        $db = new Db_extra_table($tablename);
         	

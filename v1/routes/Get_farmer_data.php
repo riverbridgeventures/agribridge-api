@@ -37,7 +37,7 @@
                 $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
 
                     // Prepare the statement
-                $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_id NOT IN ($placeHolders) AND f_status=0 LIMIT ".$limit." ");
+                $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_id NOT IN ($placeHolders) AND f_status=0 ORDER BY fm_id DESC LIMIT ".$limit." ");
                 foreach ($fm_ids_arr as $index => $value) 
                 {
                         $STH->bindValue($index + 1, $value, PDO::PARAM_INT);

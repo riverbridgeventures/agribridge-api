@@ -44,96 +44,78 @@
         }
 		
 
-		public function update($fm_ids)
+		public function update($fm_id)
         {
         	$resp_array    = array();
-        	foreach($fm_ids as $fm_id)
-            {
-                $i=0;
-                $flag = $this->isDeleted($fm_id);// check previously deleted or not
-                if(!$flag)
-                {
-                    $tbl_arr = $this->tbl_arr;
-
-                    foreach($tbl_arr as $tbl)//for each 14 tables
-                    {
-                        $udata = array();
-                        $udata['f_status'] =1;
-                        
-                        $udata['fm_id']  =$fm_id;
-
-                        $query  =" UPDATE ".$tbl ;
-                        $query .=" SET ";
-                        $query  .= "f_status=:f_status ,";
-                        
-                        $query   =chop($query,',');
-
-                        $query  .=" WHERE fm_id=:fm_id ";
-                     
-                        $stmt = $this->conn->prepare($query);
-                        $result = $stmt->execute($udata);
-                        if($result)
-                        {
-                            array_push($resp_array,$fm_id);
-                        }
-
-                        $i++;
-                    }
-                }else
-                {
-                    array_push($resp_array,$fm_id);// if previously deleted
-                }
-
-            }
         	
-        	return $resp_array;
-        }
+            $flag = $this->isDeleted($fm_id);// check previously deleted or not
+            if(!$flag)
+            {
+                $tbl_arr = $this->tbl_arr;
+
+                foreach($tbl_arr as $tbl)//for each 14 tables
+                {
+                    $udata = array();
+                    $udata['f_status'] =1;
+                    
+                    $udata['fm_id']  =$fm_id;
+
+                    $query  =" UPDATE ".$tbl ;
+                    $query .=" SET ";
+                    $query  .= "f_status=:f_status ,";
+                    
+                    $query   =chop($query,',');
+
+                    $query  .=" WHERE fm_id=:fm_id ";
+                 
+                    $stmt = $this->conn->prepare($query);
+                    $result = $stmt->execute($udata);
+                    if($result)
+                    {
+                       return true;
+                    }
+
+                    return false;
+                }
+            }else
+            {
+                return true;// if previously deleted
+            }
+            
+        }// update function end
 
 	}
 
 	$app->post('/delete_data', 'authenticate', function() use ($app){
-        verifyRequiredParams(['fm_id','fm_ids']); 
+        verifyRequiredParams(['fm_id']); 
         
         //declare variables
-        $data = $app->request->post(); //fetching the post data into variable
+        $data     = $app->request->post(); //fetching the post data into variable
         $err_data = [];
+        $fm_id    = $data['fm_id'];
         global $user_id;
     
-        //set default values here
-
-        $data['fm_caid'] = $user_id;
-
-        $fm_ids_arr  = array();
-
-
-    	foreach($data['fm_ids'] as $id)// check fm_ids is set or blank
-        {
-            if($id !="")
-            {
-            	array_push($fm_ids_arr,$id);
-            }
-        }
-       
-		if(empty($fm_ids_arr))
+        if($fm_id=='')
     	{
     		$err_data = [
-            	["error_code" => "404", "error_message" => "Farmer id's not found"]
+            	["error_code" => "404", "error_message" => "Farmer id not found"]
             ];
     	}
-    	
-    	//check if validation errors exists
+        
+        //check if validation errors exists
         if($err_data !== []){
         	$response["success"] = false;
             $response["data"] = $err_data;
             echoResponse(201, $response);
-        }else{
+        }else
+        {
+            $db          = new Db_del_data();
+            $return_data = $db->update($fm_id);
 
-                $db          = new Db_del_data();
-                $return_data = $db->update($fm_ids_arr);
+            $response["success"] = $return_data;
+            $response["data"] = '';
 
-                $response["success"] = true;
-                $response["data"] = $return_data;
-
-                echoResponse(201, $response);
+            echoResponse(201, $response);
         }
+        
     });
