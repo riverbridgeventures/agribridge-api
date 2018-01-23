@@ -82,7 +82,7 @@
                         }
                     }
 
-                    $resp = array('fm_id'=>$fm_id,'values:'=>$table_array);
+                    $resp = array('fm_id'=>$fm_id,'values'=>$table_array);
                     array_push($resp_array,$resp);
                 }// foreach fm_ids
 
@@ -117,14 +117,6 @@
             }
         }
         	
-       
-		// if(empty($fm_ids_arr))
-  //   	{
-  //   		$err_data = [
-  //           	["error_code" => "404", "error_message" => "Farmer id's not found"]
-  //           ];
-  //   	}
-    	
         if($err_data !== []){
         	$response["success"] = false;
             $response["data"] = $err_data;
