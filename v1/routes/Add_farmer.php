@@ -34,25 +34,28 @@
 
         public function create($data)
         {
-            $data_array = ['fm_caid', 'fm_id', 'fm_name', 'fm_fname', 'fm_mname', 'fm_lname', 'fm_aadhar', 'fm_mobileno', 'fm_loan', 'fm_amount', 'fm_status', 'fm_createddt', 'fm_createdby', 'fm_modifieddt', 'fm_modifiedby'];
+            $data_array = ['fm_caid', 'fm_id', 'fm_fname', 'fm_mname', 'fm_lname', 'fm_aadhar', 'fm_mobileno', 'fm_loan', 'fm_amount', 'f_status', 'fm_createddt', 'fm_createdby', 'fm_modifieddt', 'fm_modifiedby'];
             foreach($data_array as $val){
                 if(!isset($data[$val])){
                     $data[$val] = '';
                 }
             }
 
-            $query = "INSERT INTO `tbl_farmers` (`fm_caid`, `fm_id`, `fm_name`, `fm_fname`, `fm_mname`, `fm_lname`, `fm_aadhar`, `fm_mobileno`, `fm_loan`, `fm_amount`, `fm_status`, `fm_createddt`, `fm_createdby`, `fm_modifieddt`, `fm_modifiedby`) VALUES(?, (SELECT t.maximum+1 FROM (SELECT max(fm_id) as maximum FROM tbl_farmers) t) , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $query_param = "issssiississss";
+            $query = "INSERT INTO `tbl_farmers` (`fm_caid`, `fm_id`, `fm_fname`, `fm_mname`, `fm_lname`, `fm_aadhar`, `fm_mobileno`, `fm_loan`, `fm_amount`, `f_status`, `fm_createddt`, `fm_createdby`, `fm_modifieddt`, `fm_modifiedby`) VALUES(?, (SELECT t.maximum+1 FROM (SELECT max(fm_id) as maximum FROM tbl_farmers) t) , ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?)";
+            $query_param = "isssiississss";
 
             $stmt = $this->conn->prepare($query);
-            // var_dump($stmt);
-            // var_dump($this->conn->error);
+           // var_dump($stmt);
+           //   var_dump($this->conn->error);
             // exit();
 
-            $stmt->bind_param($query_param, $data['fm_caid'], $data['fm_name'], $data['fm_fname'], $data['fm_mname'], $data['fm_lname'], $data['fm_aadhar'], $data['fm_mobileno'], $data['fm_loan'], $data['fm_amount'], $data['fm_status'], $data['fm_createddt'], $data['fm_createdby'], $data['fm_modifieddt'], $data['fm_modifiedby']);
+           $a = $stmt->bind_param($query_param, $data['fm_caid'], $data['fm_fname'], $data['fm_mname'], $data['fm_lname'], $data['fm_aadhar'], $data['fm_mobileno'], $data['fm_loan'], $data['fm_amount'], $data['f_status'], $data['fm_createddt'], $data['fm_createdby'], $data['fm_modifieddt'], $data['fm_modifiedby']);
+          
             $result = $stmt->execute();
             $insert_id = $stmt->insert_id;
             $stmt->close();
+
+
 
 
             // Check for successful insertion
@@ -89,18 +92,18 @@
 
         public function update($data)
         {
-            $data_array = ['fm_caid', 'fm_id', 'fm_name', 'fm_fname', 'fm_mname', 'fm_lname', 'fm_aadhar', 'fm_mobileno', 'fm_loan', 'fm_amount', 'fm_status', 'fm_createddt', 'fm_createdby', 'fm_modifieddt', 'fm_modifiedby'];
+            $data_array = ['fm_caid', 'fm_id', 'fm_name', 'fm_fname', 'fm_mname', 'fm_lname', 'fm_aadhar', 'fm_mobileno', 'fm_loan', 'fm_amount', 'f_status', 'fm_createddt', 'fm_createdby', 'fm_modifieddt', 'fm_modifiedby'];
             foreach($data_array as $val){
                 if(!isset($data[$val])){
                     $data[$val] = '';
                 }
             }
 
-            $query = "UPDATE `tbl_farmers` SET `fm_caid` = ?, `fm_name` = ?, `fm_fname` = ?, `fm_mname` = ?, `fm_lname` = ?, `fm_aadhar` = ?, `fm_mobileno` = ?, `fm_loan` = ?, `fm_amount` = ?, `fm_status` = ?, `fm_createddt` = ?, `fm_createdby` = ?, `fm_modifieddt` = ?, `fm_modifiedby` = ? WHERE `fm_id` = ?";
+            $query = "UPDATE `tbl_farmers` SET `fm_caid` = ?, `fm_name` = ?, `fm_fname` = ?, `fm_mname` = ?, `fm_lname` = ?, `fm_aadhar` = ?, `fm_mobileno` = ?, `fm_loan` = ?, `fm_amount` = ?, `f_status` = ?, `fm_createddt` = ?, `fm_createdby` = ?, `fm_modifieddt` = ?, `fm_modifiedby` = ? WHERE `fm_id` = ?";
             $query_param = "issssiississssi";
 
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param($query_param, $data['fm_caid'], $data['fm_name'], $data['fm_fname'], $data['fm_mname'], $data['fm_lname'], $data['fm_aadhar'], $data['fm_mobileno'], $data['fm_loan'], $data['fm_amount'], $data['fm_status'], $data['fm_createddt'], $data['fm_createdby'], $data['fm_modifieddt'], $data['fm_modifiedby'], $data['fm_id']);
+            $stmt->bind_param($query_param, $data['fm_caid'], $data['fm_name'], $data['fm_fname'], $data['fm_mname'], $data['fm_lname'], $data['fm_aadhar'], $data['fm_mobileno'], $data['fm_loan'], $data['fm_amount'], $data['f_status'], $data['fm_createddt'], $data['fm_createdby'], $data['fm_modifieddt'], $data['fm_modifiedby'], $data['fm_id']);
             $result = $stmt->execute();
             $stmt->close();
             // Check for successful insertion
