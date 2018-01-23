@@ -164,7 +164,58 @@
 
 	
 
+    $app->post('/send_extra_table', 'authenticate', function() use ($app){
+        verifyRequiredParams(['tablename', 'fm_id']); //provide a list of required parametes
+        
+        //declare variables
+        $data = $app->request->post(); //fetching the post data into variable
+        $err_data = [];
+        global $user_id;
+        $tablename = $data['tablename'];
 
+        // Start : check valid table or not
+        $tbl_arr   = array('tbl_land_details', 'tbl_cultivation_data', 'tbl_yield_details', 'tbl_loan_details');
+        if(!in_array($tablename,$tbl_arr))
+        {
+            $err_data = [
+                ["error_code" => "404", "error_message" => "Invalid table name"]
+            ];
+        }
+        // End : check valid table or not
+
+
+        
+        $data['f_created_by']   = $data['fm_id'];
+        $data['f_created_date'] = date('Y-m-d h:i:s');
+        //check if validation errors exists
+        if($err_data !== []){
+            $response["success"] = false;
+            $response["data"] = $err_data;
+            echoResponse(201, $response);
+        }else{
+
+            //set default values here
+            $data['fm_caid'] = $user_id;
+
+            $db = new Db_extra_table($tablename);
+            
+            
+            $return_data = $db->create($data);
+            
+
+            if ($return_data !== false) {
+                $response["success"] = true;
+                $response["data"] = ["message" => "Data added/updated successfully!","insert_id"=>$return_data];
+            } else {
+                $response["success"] = false;
+                $response["data"] = [
+                    ["error_code" => "103", "error_message" => "Data could not be add/update."]
+                ];
+                echoResponse(201, $response);
+            }
+            echoResponse(201, $response);
+        }
+    });
 
     $app->put('/send_extra_table', 'authenticate', function() use ($app){
         verifyRequiredParams(['tablename', 'fm_id','server_id']); //provide a list of required parametes
