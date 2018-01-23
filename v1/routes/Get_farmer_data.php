@@ -106,12 +106,17 @@
     	
 
     	$fm_ids_arr  = array();
-    	foreach($data['fm_ids'] as $id){
-            if($id !="")
-            {
-            	array_push($fm_ids_arr,$id);
+
+        if(!empty($data['fm_ids']))
+        {
+            foreach($data['fm_ids'] as $id){
+                if($id !="")
+                {
+                    array_push($fm_ids_arr,$id);
+                }
             }
         }
+        	
        
 		// if(empty($fm_ids_arr))
   //   	{
