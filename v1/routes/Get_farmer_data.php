@@ -68,6 +68,7 @@
                 foreach($fm_ids as $fm_id)
                 {
                     $table_array   = array();
+                    $row_arr       = array();
                     foreach($tables as $table)
                     {  
                         $statement = $this->conn->prepare("SELECT * FROM ".$table." WHERE fm_id =:id AND f_status=:status ");
@@ -75,11 +76,11 @@
                         //$row = $statement->fetch(); 
                         while($row = $statement->fetch(PDO::FETCH_ASSOC))
                         {
-                           $tarr = array('tablename'=>$table,'rows'=>$row);
-                           array_push($table_array,$tarr);
-                           
-                            
+                          array_push($row_arr,$row);
                         }
+
+                        $tarr = array('tablename'=>$table,'rows'=>$row_arr);
+                        array_push($table_array,$tarr);
                     }
 
                     $resp = array('fm_id'=>$fm_id,'values'=>$table_array);
