@@ -79,7 +79,7 @@
             }
         }
 
-        $app->post('/getdata', 'authenticate', function() use ($app){
+        $app->post('/fm_data', 'authenticate', function() use ($app){
         verifyRequiredParams(['total', 'fm_ids']); //provide a list of required parametes
         
         //declare variables

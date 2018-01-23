@@ -45,8 +45,8 @@
             $query_param = "isssiississss";
 
             $stmt = $this->conn->prepare($query);
-           // var_dump($stmt);
-           //   var_dump($this->conn->error);
+            //var_dump($stmt);
+            //  var_dump($this->conn->error);
             // exit();
 
            $a = $stmt->bind_param($query_param, $data['fm_caid'], $data['fm_fname'], $data['fm_mname'], $data['fm_lname'], $data['fm_aadhar'], $data['fm_mobileno'], $data['fm_loan'], $data['fm_amount'], $data['f_status'], $data['fm_createddt'], $data['fm_createdby'], $data['fm_modifieddt'], $data['fm_modifiedby']);
@@ -61,28 +61,28 @@
             // Check for successful insertion
             if ($result) {
 
-	            $stmt1 = $this->conn->prepare("SELECT fm_id from tbl_farmers WHERE id = ? LIMIT 1");
-	            $stmt1->bind_param("i", $insert_id);
-	            $farmer_data = [];
-	            if ($stmt1->execute()) 
-	            {
-	                $result1 = $stmt1->get_result();
-	                while ($row = $result1->fetch_assoc()) 
-	                {
-	                    $farmer_data = $row;
-	                }
-	                $stmt1->close();
-	            }
-	            else{
-	            	return false;
-	            }
+                $stmt1 = $this->conn->prepare("SELECT fm_id from tbl_farmers WHERE id = ? LIMIT 1");
+                $stmt1->bind_param("i", $insert_id);
+                $farmer_data = [];
+                if ($stmt1->execute()) 
+                {
+                    $result1 = $stmt1->get_result();
+                    while ($row = $result1->fetch_assoc()) 
+                    {
+                        $farmer_data = $row;
+                    }
+                    $stmt1->close();
+                }
+                else{
+                    return false;
+                }
 
-	            if($farmer_data !== []){
-	            	return $farmer_data['fm_id'];
-	            }
-	            else{
-	            	return false;
-	            }
+                if($farmer_data !== []){
+                    return $farmer_data['fm_id'];
+                }
+                else{
+                    return false;
+                }
 
             } else {
                 // Failed to create Farmer
@@ -92,18 +92,21 @@
 
         public function update($data)
         {
-            $data_array = ['fm_caid', 'fm_id', 'fm_name', 'fm_fname', 'fm_mname', 'fm_lname', 'fm_aadhar', 'fm_mobileno', 'fm_loan', 'fm_amount', 'f_status', 'fm_createddt', 'fm_createdby', 'fm_modifieddt', 'fm_modifiedby'];
+            $data_array = ['fm_caid', 'fm_id', 'fm_name', 'fm_mname', 'fm_lname', 'fm_aadhar', 'fm_mobileno', 'fm_loan', 'fm_amount', 'f_status', 'fm_createddt', 'fm_createdby', 'fm_modifieddt', 'fm_modifiedby'];
             foreach($data_array as $val){
                 if(!isset($data[$val])){
                     $data[$val] = '';
                 }
             }
 
-            $query = "UPDATE `tbl_farmers` SET `fm_caid` = ?, `fm_name` = ?, `fm_fname` = ?, `fm_mname` = ?, `fm_lname` = ?, `fm_aadhar` = ?, `fm_mobileno` = ?, `fm_loan` = ?, `fm_amount` = ?, `f_status` = ?, `fm_createddt` = ?, `fm_createdby` = ?, `fm_modifieddt` = ?, `fm_modifiedby` = ? WHERE `fm_id` = ?";
-            $query_param = "issssiississssi";
+            $query = "UPDATE `tbl_farmers` SET `fm_caid` = ?,  `fm_fname` = ?, `fm_mname` = ?, `fm_lname` = ?, `fm_aadhar` = ?, `fm_mobileno` = ?, `fm_loan` = ?, `fm_amount` = ?, `f_status` = ?, `fm_createddt` = ?, `fm_createdby` = ?, `fm_modifieddt` = ?, `fm_modifiedby` = ? WHERE `fm_id` = ?";
+            $query_param = "isssiississssi";
 
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param($query_param, $data['fm_caid'], $data['fm_name'], $data['fm_fname'], $data['fm_mname'], $data['fm_lname'], $data['fm_aadhar'], $data['fm_mobileno'], $data['fm_loan'], $data['fm_amount'], $data['f_status'], $data['fm_createddt'], $data['fm_createdby'], $data['fm_modifieddt'], $data['fm_modifiedby'], $data['fm_id']);
+            // var_dump($stmt);
+             // var_dump($this->conn->error);
+            // exit();
+            $stmt->bind_param($query_param, $data['fm_caid'],  $data['fm_fname'], $data['fm_mname'], $data['fm_lname'], $data['fm_aadhar'], $data['fm_mobileno'], $data['fm_loan'], $data['fm_amount'], $data['f_status'], $data['fm_createddt'], $data['fm_createdby'], $data['fm_modifieddt'], $data['fm_modifiedby'], $data['fm_id']);
             $result = $stmt->execute();
             $stmt->close();
             // Check for successful insertion
@@ -118,8 +121,8 @@
 
         public function validAAdhar($data)
         {
-        	
-        	$stmt = $this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_aadhar = ?");
+            
+            $stmt = $this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_aadhar = ?");
             $stmt->bind_param("i", $data['fm_aadhar']);
             if ($stmt->execute()) 
             {
@@ -132,21 +135,21 @@
                 $stmt->close();
 
                 if(sizeof($ret_data) == 0){
-                	return true;
+                    return true;
                 }
                 else{
-                	return false;
+                    return false;
                 }
             }
             else{
-            	return false;
+                return false;
             }
         }
 
         public function validMobile($data)
         {
 
-        	$stmt = $this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_mobileno = ?");
+            $stmt = $this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_mobileno = ?");
             $stmt->bind_param("i", $data['fm_mobileno']);
             if ($stmt->execute()) 
             {
@@ -159,14 +162,14 @@
                 $stmt->close();
 
                 if(sizeof($ret_data) == 0){
-                	return true;
+                    return true;
                 }
                 else{
-                	return false;
+                    return false;
                 }
             }
             else{
-            	return false;
+                return false;
             }
         }
 
@@ -231,12 +234,12 @@
         $data = $app->request->post(); //fetching the post data into variable
         $err_data = [];
         global $user_id;
-    	
+        
         //set default values here
         $data['fm_caid'] = $user_id;
         $db = new Db_add_farmer();
 
-    	//Do validations here
+        //Do validations here
         if(!$db->validAAdhar($data)){
             $err_data[] = ["error_code" => "101", "error_message" => "Adhar no. already exist."];
         }
@@ -246,22 +249,22 @@
 
         //check if validation errors exists
         if($err_data !== []){
-        	$response["success"] = false;
+            $response["success"] = false;
             $response["data"] = $err_data;
             echoResponse(201, $response);
         }else{
 
-        	//valid data hence inserting into table
-	        $return_data    = $db->create($data);
+            //valid data hence inserting into table
+            $return_data    = $db->create($data);
 
-	        if ($return_data !== false) {
-	            $response["success"] = true;
-	            $response["data"] = ["fm_id" => $return_data, "message" => "Data added successfully!"];
-	        } else {
-	            $response["success"] = false;
-	            $response["message"] = "Failed to Add data. Please try again";
-	        }
-	        echoResponse(201, $response);
+            if ($return_data !== false) {
+                $response["success"] = true;
+                $response["data"] = ["fm_id" => $return_data, "message" => "Data added successfully!"];
+            } else {
+                $response["success"] = false;
+                $response["message"] = "Failed to Add data. Please try again";
+            }
+            echoResponse(201, $response);
         }
     });
 
@@ -272,12 +275,12 @@
         $data = $app->request->put(); //fetching the put data into variable
         $err_data = [];
         global $user_id;
-    	
+        
         //set default values here
         $data['fm_caid'] = $user_id;
         $db = new Db_add_farmer();
 
-    	//Do validations here
+        //Do validations here
         if(!$db->validAAdharUpdate($data)){
             $err_data[] = ["error_code" => "101", "error_message" => "Adhar no. already exist."];
         }
@@ -287,22 +290,22 @@
 
         //check if validation errors exists
         if($err_data !== []){
-        	$response["success"] = false;
+            $response["success"] = false;
             $response["data"] = $err_data;
             echoResponse(201, $response);
         }else{
 
-        	//valid data hence inserting into table
-	        $return_data = $db->update($data);
+            //valid data hence inserting into table
+            $return_data = $db->update($data);
 
-	        if ($return_data !== false) {
-	            $response["success"] = true;
-	            $response["data"] = ["fm_id" => $return_data, "message" => "Data added successfully!"];
-	        } else {
-	            $response["success"] = false;
-	            $response["message"] = "Failed to Add data. Please try again";
-	        }
-	        echoResponse(201, $response);
+            if ($return_data !== false) {
+                $response["success"] = true;
+                $response["data"] = ["fm_id" => $return_data, "message" => "Data added successfully!"];
+            } else {
+                $response["success"] = false;
+                $response["message"] = "Failed to Add data. Please try again";
+            }
+            echoResponse(201, $response);
         }
     });
 
