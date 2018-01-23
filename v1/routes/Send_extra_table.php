@@ -95,9 +95,9 @@
             $cols = substr(trim($cols), 0, -1);
 
             $q .= $cols ;
-           echo  $q .= " WHERE fm_id = :fm_id AND id = :id ";
+            $q .= " WHERE fm_id = :fm_id AND id = :id ";
 
-           exit();
+          
             $this->gen_update_query = $q;
             $this->gen_update_data_array = $data_arr;
         }
