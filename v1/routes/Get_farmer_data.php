@@ -17,27 +17,30 @@
                 $db             = new DbConnect();
                 $this->conn     = $db->PDO();
                
-                $this->tbl_arr  = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_bank_loan_detail','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
+                $this->tbl_arr  = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
 
             }
 
-            public function getall($fm_ids_arr,$limit)
+            public function getall($fm_ids_arr,$data)
             {
                 $tables = $this->tbl_arr;
+
+               
+                $limit      = $data['total'];
 
                 $resp_array = array();
                 $fm_ids     = array();
 
                 if($limit=='')
                 {
-                    $limit = 1;
+                    $limit = 10;
                 }
 
 
                 $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
 
                     // Prepare the statement
-                $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_id NOT IN ($placeHolders) AND f_status=0 ORDER BY fm_id DESC LIMIT ".$limit." ");
+                $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_id NOT IN ($placeHolders) AND f_status=0 AND fm_caid='".$data['fm_caid']."'ORDER BY fm_id DESC LIMIT ".$limit." ");
                 foreach ($fm_ids_arr as $index => $value) 
                 {
                         $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
@@ -57,7 +60,7 @@
                 {
                     $table_array   = array();
                     foreach($tables as $table)
-                    {
+                    {  
                         $statement = $this->conn->prepare("SELECT * FROM ".$table." WHERE fm_id =:id AND f_status=:status ");
                         $statement->execute(array(':id' => $fm_id,'status'=>0));
                         //$row = $statement->fetch(); 
@@ -65,6 +68,7 @@
                         {
                            $tarr = array('tablename'=>$table,'rows'=>$row);
                            array_push($table_array,$tarr);
+                           
                             
                         }
                     }
@@ -74,7 +78,7 @@
                 }// foreach fm_ids
 
                     
-               
+              
                 return $resp_array;
             }
         }
@@ -118,7 +122,7 @@
 	        
             $db          = new Db_data_table();
             
-            $return_data = $db->getAll($fm_ids_arr,$data['total']);
+            $return_data = $db->getAll($fm_ids_arr,$data);
             
             if ($return_data !== false) {
 	            $response["success"] = true;

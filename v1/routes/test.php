@@ -3,7 +3,7 @@
 	/**
 	* 
 	*/
-	class Db_table
+	class Db_test
 	{
 		private $conn;
 		private $tablename = "";
@@ -12,7 +12,7 @@
 		private $gen_update_query;
 		private $gen_update_data_array;
 
-		function __construct($table_name)
+		function __construct($table_name,$data)
 		{
 			require_once dirname(__FILE__) . '/../../include/DbConnect.php';
             // opening db connection
@@ -23,13 +23,13 @@
             $res = $this->conn->query("SHOW COLUMNS FROM ".$this->tablename)->fetchAll();
 
             $this->getInsertQuery($res);
-		    $this->getUpdateQuery($res);
+		    $this->getUpdateQuery($res,$data);
 		}
 
 		public function isInserted($fm_id)
 		{
 			$res = $this->conn->query("SELECT fm_caid FROM ".$this->tablename. " WHERE fm_id = " . $fm_id)->fetchAll();
-
+			
 			if(sizeof($res) > 0){
 				return true;
 			}
@@ -38,7 +38,7 @@
 
 		private function getInsertQuery($array)
 		{
-
+            //print_r($array);exit();
 	        $q = "INSERT INTO ";
 	        $q .= "`" . $this->tablename . "` (";
 
@@ -75,30 +75,49 @@
 	        // $this->gen_insert_param = $para;
 	    }
 
-	    private function getUpdateQuery($array)
+	    
+	    private function getUpdateQuery($array,$data)
 	    {
-	        
-	        $q = "UPDATE ";
+	    	$data_arr=[];
+	        foreach ($array as $field) {
+                $data_arr[] = $field['Field'];
+            }
+
+			$q = "UPDATE ";
 	        $q .= "`" . $this->tablename . "` SET ";
 
 	        $cols = '';
-	        $data_arr = [];
+	        $local_field  =  array();
 
-	        foreach ($array as $field) {
-	            if($field['Extra'] != "auto_increment" && $field['Field'] != "fm_id"){
-	                $cols .= "" . $field['Field'] . " = :".$field['Field'].", ";
+          
+            foreach($data as $field=>$val) // client request field
+            {
+            	array_push($local_field,$field);
+            }
 
-	                $data_arr[] = $field['Field'];
-	            }
-	        }
-
-	        $cols = substr(trim($cols), 0, -1);
+            foreach($local_field as $field) // filter column
+            {
+            	if(!in_array($field,$data_arr))
+            	{
+            		if (($key = array_search($field, $local_field)) !== false)
+            		{
+						    unset($local_field[$key]);
+					}else
+					{
+						if($col !="fm_id")
+		            	{
+		            		$cols  .= $col."=:".$col.","; // generate string
+		            	}
+					}
+            	}
+            }
+          
+           	$cols = chop($cols,',');
 
 	        $q .= $cols ;
 	        $q .= " WHERE fm_id = :fm_id";
 
-
-	        $this->gen_update_query = $q;
+			$this->gen_update_query = $q;
 	        $this->gen_update_data_array = $data_arr;
 	    }
 
@@ -132,20 +151,47 @@
         {
         	$final_data = [];
             $data_array = $this->gen_update_data_array;
-            foreach($data_array as $val){
-                if(!isset($data[$val])){
-                    $data[$val] = '';
-                }
-                $final_data[$val] = $data[$val];
+  
+           // print_r($data_array);
+
+            $server_col = array();
+            $local_col  =  array();
+
+            foreach($data as $lcol=>$val)
+            {
+            	array_push($local_col,$lcol);
+            }
+            foreach($data_array as $scol)
+            {
+            	array_push($server_col,$scol);
+            }
+
+
+            foreach($local_col as $lcol)
+            {
+            	if(!in_array($lcol,$server_col))
+            	{
+            		if (($key = array_search($lcol, $local_col)) !== false) {
+						    unset($local_col[$key]);
+						}
+            	}
+            	
+            }
+
+			foreach($local_col as $val){
+                
+                $final_data[$val] =$data[$val];
             }
 
             //setting explicitly because its not exists in $data_array
             $final_data['fm_id'] = $data['fm_id'];
 
             $query = $this->gen_update_query;
+
+           
             $stmt = $this->conn->prepare($query);
 
-
+            //print_r($final_data);exit();
             $result = $stmt->execute($final_data);
 
             // Check for successful update
@@ -159,7 +205,7 @@
         }
 	}
 
-	$app->post('/send_table', 'authenticate', function() use ($app){
+	$app->post('/test', 'authenticate', function() use ($app){
         verifyRequiredParams(['tablename', 'fm_id']); //provide a list of required parametes
         
         //declare variables
@@ -168,7 +214,7 @@
         global $user_id;
     	$tablename = $data['tablename'];
 
-    	$tbl_arr = array('tbl_personal_detail','tbl_financial_details','tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_appliances_details','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
+    	$tbl_arr = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_appliances_details','tbl_cultivation_data','tbl_family_details','tbl_financial_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_personal_detail','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
 
     	if(!in_array($tablename,$tbl_arr))//check valid table
     	{
@@ -179,8 +225,7 @@
 
 
         //set default values here
-        $data['fm_caid'] = $user_id;
-
+         $data['fm_caid'] = $user_id;
 
      	//check if validation errors exists
         if($err_data !== []){
@@ -189,26 +234,14 @@
             echoResponse(201, $response);
         }else{
 
-        	$db = new Db_table($tablename);
+        	$db = new Db_test($tablename,$data);
         	//valid data hence inserting/updating into table
         	if($db->isInserted($data['fm_id'])){
-
-				if($tablename!='tbl_farmers')
-		        {
-		        	$data['f_modified_date'] = date('Y-m-d h:i:s');
-		        	$data['f_modified_by']   = $user_id;
-		        }
-
 		        $return_data = $db->update($data);
-        	}
+		    }
         	else{
-		          $return_data = $db->create($data);
-		          if($tablename!='tbl_farmers')
-		      	  {
-		        	$data['f_created_date'] = date('Y-m-d h:i:s');
-		        	$data['f_created_by']   = $user_id;
-		       	 }
-        	}
+		        $return_data = $db->create($data);
+		    }
 
 	        if ($return_data !== false) {
 	            $response["success"] = true;

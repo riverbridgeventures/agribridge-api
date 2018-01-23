@@ -255,6 +255,11 @@
         }else{
 
             //valid data hence inserting into table
+
+             $data['fm_createddt'] = date('Y-m-d h:i:s');
+             $data['fm_createdby'] =$user_id;
+
+
             $return_data    = $db->create($data);
 
             if ($return_data !== false) {
@@ -296,6 +301,9 @@
         }else{
 
             //valid data hence inserting into table
+            $data['fm_modifieddt']  = date('Y-m-d h:i:s');
+            $data['fm_modifiedby']  = $user_id;
+
             $return_data = $db->update($data);
 
             if ($return_data !== false) {
