@@ -11,6 +11,7 @@ $app->post('/login', function() use ($app) {
 	// reading post params
 	$email = $app->request()->post('email');
 	$password = $app->request()->post('password');
+	$email    = strtolower($email);
 
 	$response = array();
 	$db = new DbHandler();

@@ -37,15 +37,24 @@
                 }
 
 
-                $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
+                
 
                     // Prepare the statement
-                $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE fm_id NOT IN ($placeHolders) AND f_status=0 AND fm_caid='".$data['fm_caid']."'ORDER BY fm_id DESC LIMIT ".$limit." ");
-                foreach ($fm_ids_arr as $index => $value) 
+                if(!empty($fm_ids_arr))
                 {
-                        $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
-                        
+                     $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
+                     $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0 AND fm_caid='".$data['fm_caid']."' AND fm_id NOT IN ($placeHolders)  ORDER BY fm_id DESC LIMIT ".$limit." ");
+                    foreach ($fm_ids_arr as $index => $value) 
+                    {
+                            $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
+                            
+                    }
+                }else
+                {
+                    $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0 AND fm_caid='".$data['fm_caid']."' ORDER BY fm_id DESC LIMIT ".$limit." ");
+                    
                 }
+               
 
                     // This should now work
                 $result = $STH->execute();
@@ -104,12 +113,12 @@
             }
         }
        
-		if(empty($fm_ids_arr))
-    	{
-    		$err_data = [
-            	["error_code" => "404", "error_message" => "Farmer id's not found"]
-            ];
-    	}
+		// if(empty($fm_ids_arr))
+  //   	{
+  //   		$err_data = [
+  //           	["error_code" => "404", "error_message" => "Farmer id's not found"]
+  //           ];
+  //   	}
     	
         if($err_data !== []){
         	$response["success"] = false;
