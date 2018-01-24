@@ -97,8 +97,7 @@
 	        $q .= $cols ;
 	        $q .= " WHERE fm_id = :fm_id";
 
-
-	        $this->gen_update_query = $q;
+			$this->gen_update_query = $q;
 	        $this->gen_update_data_array = $data_arr;
 	    }
 

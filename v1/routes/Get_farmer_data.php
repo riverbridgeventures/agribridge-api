@@ -36,10 +36,7 @@
                     $limit = 10;
                 }
 
-
-                
-
-                    // Prepare the statement
+                // Prepare the statement
                 if(!empty($fm_ids_arr))
                 {
                      $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
@@ -55,8 +52,7 @@
                     
                 }
                
-
-                    // This should now work
+                // This should now work
                 $result = $STH->execute();
                 while($row = $STH->fetch(PDO::FETCH_ASSOC))
                 {
@@ -87,8 +83,6 @@
                     array_push($resp_array,$resp);
                 }// foreach fm_ids
 
-                    
-              
                 return $resp_array;
             }
         }
@@ -103,9 +97,6 @@
     	$total = $data['total'];
 
     	// Start : check valid table or not
-    	
-    	
-
     	$fm_ids_arr  = array();
 
         if(!empty($data['fm_ids']))
