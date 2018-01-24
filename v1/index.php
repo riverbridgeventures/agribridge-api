@@ -65,6 +65,7 @@ require './routes/Get_farmer_data.php';
 require './routes/delete_data.php';
 require './routes/delete_extra_data.php';
 require './routes/test.php';
+require './routes/app_version.php';
 
 // Run Slim
 $app->run();
