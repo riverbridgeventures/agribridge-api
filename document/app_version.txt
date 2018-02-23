@@ -1,0 +1,18 @@
+
+url '/app_version'
+
+Request : 
+ 
+    version : 1.0.1;
+
+Response :
+
+	{
+	    "success": true,
+	    "data": [
+	        {
+	            "desc": "asdadasdsd",
+	            "url": "www.acrefin.com"
+	        }
+	    ]
+	}

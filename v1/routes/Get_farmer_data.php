@@ -1,5 +1,5 @@
 <?php 
-
+    ini_set('memory_limit', '-1');
         class Db_data_table
         {
             private $conn;
@@ -17,7 +17,7 @@
                 $db             = new DbConnect();
                 $this->conn     = $db->PDO();
                
-                $this->tbl_arr  = array('tbl_farmers','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details');
+                $this->tbl_arr  = array('tbl_farmers','tbl_personal_detail','tbl_applicant_knowledge','tbl_applicant_phone','tbl_asset_details','tbl_cultivation_data','tbl_family_details','tbl_land_details','tbl_livestock_details','tbl_loan_details','tbl_residence_details','tbl_spouse_details','tbl_spouse_knowledge','tbl_yield_details','tbl_appliances_details','tbl_financial_details');
 
             }
 
@@ -36,27 +36,35 @@
                     $limit = 10;
                 }
 
-                // Prepare the statement
+                    // Prepare the statement
+                    //AND fm_caid='".$data['fm_caid']."'
                 if(!empty($fm_ids_arr))
                 {
                      $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
-                     $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0 AND fm_caid='".$data['fm_caid']."' AND fm_id NOT IN ($placeHolders)  ORDER BY fm_id DESC LIMIT ".$limit." ");
+                     $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0  AND fm_id NOT IN ($placeHolders) AND fm_caid='".$data['fm_caid']."' ORDER BY fm_id DESC LIMIT 700");
                     foreach ($fm_ids_arr as $index => $value) 
                     {
-                            $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
-                            
+                        $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
                     }
                 }else
                 {
-                    $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0 AND fm_caid='".$data['fm_caid']."' ORDER BY fm_id DESC LIMIT ".$limit." ");
-                    
+                    $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0  AND fm_caid='".$data['fm_caid']."' ORDER BY fm_id DESC LIMIT 700 ");
                 }
                
-                // This should now work
+
+                    // This should now work
                 $result = $STH->execute();
+                
+                $excel_fm_ids  = array();
+                
                 while($row = $STH->fetch(PDO::FETCH_ASSOC))
                 {
                     array_push($fm_ids,$row['fm_id']);
+                    
+                    if($row['insert_type']==1)
+                    {
+                        array_push($excel_fm_ids,$row['fm_id']);
+                    }
                     
                 }
 
@@ -64,9 +72,10 @@
                 foreach($fm_ids as $fm_id)
                 {
                     $table_array   = array();
-                    $row_arr       = array();
+                   
                     foreach($tables as $table)
                     {  
+                        $row_arr       = array();
                         $statement = $this->conn->prepare("SELECT * FROM ".$table." WHERE fm_id =:id AND f_status=:status ");
                         $statement->execute(array(':id' => $fm_id,'status'=>0));
                         //$row = $statement->fetch(); 
@@ -83,12 +92,43 @@
                     array_push($resp_array,$resp);
                 }// foreach fm_ids
 
+                // array_push($resp_array,$excel_fm_ids);
+              
                 return $resp_array;
             }
+            
+            public function getErrors($fm_ids_arr,$data)
+            {
+                $error_array               = array();
+
+                if(!empty($fm_ids_arr))
+                {
+                     $placeHolders = implode(', ', array_fill(0, count($fm_ids_arr), '?'));
+                     $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0 AND insert_type=1  AND fm_id NOT IN ($placeHolders) AND fm_caid='".$data['fm_caid']."' ORDER BY fm_id DESC LIMIT 700");
+                    foreach ($fm_ids_arr as $index => $value) 
+                    {
+                        $STH->bindValue($index + 1, $value, PDO::PARAM_INT);
+                    }
+                }else
+                {
+                    $STH =$this->conn->prepare("SELECT * FROM tbl_farmers WHERE f_status=0 AND insert_type=1  AND fm_caid='".$data['fm_caid']."' ORDER BY fm_id DESC LIMIT 700 ");
+                }
+
+                $result = $STH->execute();
+
+              
+                while($row = $STH->fetch(PDO::FETCH_ASSOC))
+                {
+                    array_push($error_array,$row['fm_id']);
+                }
+
+                return $error_array;
+            }
+            
         }
 
         $app->post('/fm_data', 'authenticate', function() use ($app){
-        verifyRequiredParams(['total', 'fm_ids']); //provide a list of required parametes
+        verifyRequiredParams(['total']); //provide a list of required parametes
         
         //declare variables
         $data = $app->request->post(); //fetching the post data into variable
@@ -97,11 +137,15 @@
     	$total = $data['total'];
 
     	// Start : check valid table or not
+    	
+    	
+
     	$fm_ids_arr  = array();
 
-        if(!empty($data['fm_ids']))
+        if(@$data['fm_ids']!="")
         {
-            foreach($data['fm_ids'] as $id){
+            $req_ids = explode(',',$data['fm_ids']);
+            foreach($req_ids as $id){
                 if($id !="")
                 {
                     array_push($fm_ids_arr,$id);
@@ -121,10 +165,12 @@
             $db          = new Db_data_table();
             
             $return_data = $db->getAll($fm_ids_arr,$data);
+            $errors = $db->getErrors($fm_ids_arr,$data);
             
             if ($return_data !== false) {
 	            $response["success"] = true;
 	            $response["data"] = $return_data;
+	            $response["error_ids"] = $errors;
 	        } else {
 	            $response["success"] = false;
 	            $response["data"] = [

@@ -18,7 +18,7 @@ if(SLIM_DEBUG){
   $app->config('debug',true);
 }
 
-/** ============================================== CORS ======
+    /** ============================================== CORS ======
     Remember to remove the following code in production mode.
     ==========================================================*/
 	
@@ -66,6 +66,6 @@ require './routes/delete_data.php';
 require './routes/delete_extra_data.php';
 require './routes/test.php';
 require './routes/app_version.php';
-
+require './routes/gyankisan_app_version.php';
 // Run Slim
 $app->run();
